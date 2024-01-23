@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="introMapper"> 
+
+	<resultMap id="introResultSet" type="intro">
+			<result column="IBOARD_NO" property="iboardNo"/>
+			<result column="IBOARD_TITLE" property="iboardTitle"/>
+			<result column="IBOARD_CONTENT" property="iboardContent"/>
+			<result column="IBOARD_WRITER" property="iboardWriter"/>
+			<result column="IBOARD_INSERT" property="iboardInsert"/>
+			<result column="IBOARD_UPDATE" property="iboardUpdate"/>
+			<result column="IBOARD_DELETE" property="iboardDelete"/>
+			<result column="PROJECT_NO" property="projectNo"/>
+			<result column="IBOARD_VIEWS" property="iboardViews"/>
+	</resultMap>
+	
+	<resultMap id="introAttachmentResultSet" type="introAttachment">
+		<result column="IATTACHMENT_NO" property="iAttachmentNo"/>
+		<result column="IBOARD_NO" property="iboardNo"/>
+		<result column="IATTACHMENT_ORIGIN" property="iAttachmentOrigin"/>
+		<result column="IATTACHMENT_CHANGE" property="iAttachmentChange"/>
+		<result column="IATTACHMENT_PATH" property="iAttachmentPath"/>
+		<result column="IATTACHMENT_INSERT" property="iAttachmentInsert"/>
+		<result column="IATTACHMENT_LEVEL" property="iAttachmentLevel"/>
+	</resultMap>
+
+	<resultMap id="pRelationResultSet" type="pRelation">
+		<result column="RECRUITMENT_NO" property="recruitmentNo"/>
+		<result column="TAGS_NO" property="tagsNo"/>
+	</resultMap>
+	
+	<resultMap id="LikesSet" type="likes">
+		<result column="LIKES_MEMBER" property="likesMember"/>
+		<result column="IBOARD_NO" property="iboardNo"/>
+	</resultMap>
+	
+	<resultMap id="ireplyResultSet" type="ireply">
+		<result column="IREPLY_NO" property="ireplyNo"/>
+		<result column="MEMBER_NO" property="memberNo"/>
+		<result column="IBOARD_NO" property="iboardNo"/>
+		<result column="IREPLY_PARENT" property="ireplyParent"/>
+		<result column="IREPLY_CONTENT" property="ireplyContent"/>
+		<result column="IREPLY_INSERT" property="ireplyInsert"/>
+		<result column="IREPLY_UPDATE" property="ireplyUpdate"/>
+		<result column="IREPLY_DELETE" property="ireplyDelete"/>
+	</resultMap>
+	
+	<resultMap id="ireplyImageResultSet" type="ireplyImage">
+		<result column="IREPLY_NO" property="ireplyNo"/>
+		<result column="MEMBER_NO" property="memberNo"/>
+		<result column="MEMBER_NAME" property="memberName"/>
+		<result column="IBOARD_NO" property="iboardNo"/>
+		<result column="IREPLY_PARENT" property="ireplyParent"/>
+		<result column="IREPLY_CONTENT" property="ireplyContent"/>
+		<result column="IREPLY_INSERT" property="ireplyInsert"/>
+		<result column="IREPLY_UPDATE" property="ireplyUpdate"/>
+		<result column="IREPLY_DELETE" property="ireplyDelete"/>
+	</resultMap>
+	
+	<resultMap id="projectResultSet" type="project">
+		<result column="PROJECT_NO" property="projectNo" />
+		<result column="PROJECT_OWNER" property="projectOwner" />
+		<result column="RECRUITMENT_NO" property="recruitmentNo" />
+		<result column="PROJECT_NAME" property="projectName" />
+		<result column="PROJECT_INFO" property="projectInfo" />
+		<result column="PROJECT_INSERT" property="projectInsert" />
+		<result column="PROJECT_START" property="projectStart" />
+		<result column="PROJECT_END" property="projectEnd" />
+		<result column="PROJECT_LOCATION" property="projectLocation" />
+		<result column="PROJECT_READY" property="projectReady" />
+	</resultMap>
+
+	<resultMap id="recruitmentResultSet" type="recruitment">
+		<result column="RECRUITMENT_NO" property="recruitmentNo" />
+		<result column="RECRUITMENT_TITLE" property="recruitmentTitle" />
+		<result column="RECRUITMENT_CONTENT" property="recruitmentContent" />
+		<result column="RECRUITMENT_WRITER" property="recruitmentWriter" />
+		<result column="RECRUITMENT_INSERT" property="recruitmentInsert" />
+		<result column="RECRUITMENT_UPDATE" property="recruitmentUpdate" />
+		<result column="RECRUITMENT_DELETE" property="recruitmentDelete" />
+		<result column="RECRUITMENT_VIEWS" property="recruitmentView" />
+		<result column="RECRUITMENT_START" property="recruitmentStart" />
+		<result column="RECRUITMENT_END" property="recruitmentEnd" />
+		<result column="RECRUITMENT_LOCATION" property="recruitmentLocation" />
+		<result column="RECRUITMENT_INTRO" property="recruitmentIntro" />
+	</resultMap>
+	
+	<resultMap id="rStateResultSet" type="rState">		
+		<result column="RECRUITMENT_NO" property="recruitmentNo" />
+		<result column="ROLE" property="position" />
+		<result column="MAX_PERSONNEL" property="maxPersonnel" />
+	</resultMap>
+		
+	<resultMap id="rAttachmentResultSet" type="rAttachment">
+		<result column="RECRUITMENT_ATTACHMENT_NO" property="rAttachmentNo" />
+		<result column="RECRUITMENT_NO" property="recruitmentNo" />
+		<result column="RECRUITMENT_ATTACHMENT_ORIGIN" property="rAttachmentOrigin" />
+		<result column="RECRUITMENT_ATTACHMENT_CHANGE" property="rAttachmentChange" />
+		<result column="RECRUITMENT_ATTACHMENT_PATH" property="rAttachmentPath"/>
+		<result column="RECRUITMENT_ATTACHMENT_INSERT" property="rAttachmentInsert" />		
+		<result column="RECRUITMENT_ATTACHMENT_LEVEL" property="rAttachmentLevel" />		
+	</resultMap>	
+		
+	<resultMap id="joinsResultSet" type="joins">
+		<result column="JOINS_NO" property="joinsNo" />
+		<result column="MEMBER_NO" property="memberNo" />
+		<result column="PROJECT_NO" property="projectNo" />
+		<result column="JOINS_ROLE" property="position" />
+		<result column="JOINS_REVIEW" property="joinsReview" />
+	</resultMap>
+	
+	<resultMap id="profileResultSet" type="profile">
+		<result column="MEMBER_NO" property="memberNo" />
+		<result column="MEMBER_NAME" property="memberName" />
+		<result column="JOINS_ROLE" property="role" />
+		<result column="PROJECT_NO" property="projectNo" />
+		<result column="PROFILE_IMG" property="profileImg" />
+	</resultMap>
+		
+	<insert id="insertBoard" parameterType="intro">
+		INSERT INTO IBOARD(
+			IBOARD_NO,
+			IBOARD_TITLE,
+			IBOARD_CONTENT,
+			IBOARD_WRITER,
+			PROJECT_NO
+		) VALUES (
+			SEQ_IBOARD.NEXTVAL,
+			#{iboardTitle},
+			#{iboardContent},
+			#{iboardWriter},
+			#{projectNo}	
+		)
+	</insert>
+	
+	<insert id="insertBoardImg" parameterType="introAttachment">
+		INSERT INTO IATTACHMENT(
+			IATTACHMENT_NO,
+			IBOARD_NO,
+			IATTACHMENT_ORIGIN,
+			IATTACHMENT_PATH,
+			IATTACHMENT_CHANGE,
+			IATTACHMENT_LEVEL
+		) VALUES (
+			SEQ_IATTACHMENT.NEXTVAL,
+			SEQ_IBOARD.CURRVAL,
+			#{iAttachmentOrigin},
+			#{iAttachmentPath},
+			#{iAttachmentChange},
+			#{iAttachmentLevel}
+		)	
+	</insert>
+	
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*)
+		FROM IBOARD
+		WHERE IBOARD_DELETE IS NULL
+	</select>
+	
+	<select id="selectList" resultMap="introResultSet">
+		SELECT IBOARD_NO,
+		 	IBOARD_TITLE, 
+		 	PROJECT_NO,
+		 	IBOARD_VIEWS,
+		 	IBOARD_CONTENT,
+		 	M.MEMBER_NAME AS "IBOARD_WRITER",
+		 	PROJECT_NO,
+		 	TO_CHAR(I.IBOARD_INSERT, 'YYYY-MM-DD') AS "IBOARD_INSERT",
+		 	IBOARD_VIEWS
+		FROM IBOARD I, MEMBER M
+		WHERE I.IBOARD_WRITER = M.MEMBER_NO
+		   	AND IBOARD_DELETE IS NULL
+		ORDER BY IBOARD_NO DESC 	  
+		</select>
+	
+	<select id="selectattachment" parameterType="introAttachment" resultMap="introAttachmentResultSet">
+    	SELECT IATTACHMENT_NO,
+            IBOARD_NO, 
+            IATTACHMENT_ORIGIN, 
+            IATTACHMENT_CHANGE, 
+            IATTACHMENT_PATH,
+            IATTACHMENT_INSERT, 
+        	IATTACHMENT_LEVEL 
+    	FROM IATTACHMENT 
+    	WHERE IBOARD_NO = #{iboardNo} 
+       		AND IATTACHMENT_LEVEL = 0
+	</select>
+	
+	<select id="selectProject" parameterType="project" resultMap="projectResultSet">
+		SELECT PROJECT_NO,
+			M.MEMBER_NAME AS "PROJECT_OWNER",
+			RECRUITMENT_NO,
+			PROJECT_NAME,
+			PROJECT_INFO,
+			PROJECT_INSERT,
+			PROJECT_START,
+			PROJECT_END,
+			PROJECT_LOCATION,
+			PROJECT_READY
+		FROM PROJECT P, MEMBER M
+		WHERE PROJECT_READY = 2
+			AND P.PROJECT_OWNER = M.MEMBER_NO
+			AND P.PROJECT_OWNER = #{memberNo}
+	</select>
+	
+
+	
+	<select id="selectRecruitment" parameterType="recruitment" resultMap="recruitmentResultSet">
+		SELECT *
+			FROM RECRUITMENT R, PROJECT P
+			WHERE P.RECRUITMENT_NO = R.RECRUITMENT_NO
+	</select>
+	
+	<update id="increaseCount" parameterType="_int">
+		UPDATE IBOARD
+		SET IBOARD_VIEWS = IBOARD_VIEWS + 1
+		WHERE IBOARD_NO = #{iboardNo}
+			AND IBOARD_DELETE IS NULL
+	</update>
+	
+	<select id="getTagInfo" parameterType="intro" resultMap="pRelationResultSet">
+		SELECT P.RECRUITMENT_NO,
+	      	T.TAGS_NAME AS "TAGS_NO" 
+		FROM TAGS T, PRELATION PR, IBOARD I, PROJECT P 
+		WHERE I.PROJECT_NO = P.PROJECT_NO
+			AND P.RECRUITMENT_NO = PR.RECRUITMENT_NO
+			AND PR.TAGS_NO = T.TAGS_NO
+			AND P.RECRUITMENT_NO = #{recruitmentNo}
+	</select>
+	
+	<select id="getWishList" parameterType="intro" resultType="_int">
+		SELECT COUNT(*) 
+		FROM LIKES 
+		WHERE IBOARD_NO=#{iboardNo} 
+			AND LIKES_MEMBER = #{iboardContent}
+    </select>
+    
+  	<select id="getWish" parameterType="likes" resultType="_int">
+	  	SELECT COUNT(*) 
+	  	FROM LIKES 
+	    WHERE IBOARD_NO = #{iboardNo} 
+	  		AND LIKES_MEMBER = #{likesMember}
+  	</select>
+	<delete id="deleteWish" parameterType="likes">
+		DELETE 
+		FROM LIKES 
+	 	WHERE LIKES_MEMBER = #{likesMember} 
+	   		AND IBOARD_NO = #{iboardNo}
+	</delete>
+	<insert id="insertWish" parameterType="likes">
+		INSERT INTO LIKES(LIKES_MEMBER,IBOARD_NO) 
+	        VALUES(#{likesMember},
+	            #{iboardNo})
+    </insert>  
+    
+    <update id="plusView" parameterType="_int">
+		UPDATE IBOARD 
+		SET IBOARD_VIEWS = IBOARD_VIEWS + 1 
+		WHERE IBOARD_NO = #{ino} 
+			AND IBOARD_DELETE IS NULL
+   	</update>
+   
+   	<select id="selectBoard" parameterType="_int" resultMap="introResultSet">
+   		SELECT I.IBOARD_NO,
+   			I.IBOARD_TITLE,
+   			I.IBOARD_CONTENT,
+   			I.IBOARD_INSERT,
+   			I.IBOARD_VIEWS,
+  			M.MEMBER_NAME AS "IBOARD_WRITER"
+    	FROM IBOARD I, MEMBER M 
+    	WHERE I.IBOARD_WRITER = M.MEMBER_NO
+      		AND IBOARD_NO = #{ino} 
+      		AND IBOARD_DELETE IS NULL
+   </select>
+    
+    <select id="getAllWish" parameterType="_int" resultType="_int">
+    	SELECT COUNT(*) 
+    	FROM LIKES 
+    	WHERE IBOARD_NO = #{iboardNo}
+    </select>
+    
+    <update id="deleteForm" parameterType="_int">
+  		UPDATE IBOARD
+  		SET IBOARD_DELETE = SYSDATE
+  		WHERE IBOARD_NO = #{iboardNo}
+  	</update>
+    
+   	<select id="selectReplyList" parameterType="_int" resultMap="ireplyImageResultSet">
+  		SELECT I.IREPLY_NO AS "IREPLY_NO"
+			, M.MEMBER_NO AS "MEMBER_NO"
+			, M.MEMBER_NAME AS "MEMBER_NAME"
+			, I.IREPLY_CONTENT AS "IREPLY_CONTENT"
+			, TO_CHAR(I.IREPLY_INSERT, 'YYYY-MM-DD') AS "IREPLY_INSERT"
+  		FROM IREPLY I, MEMBER M
+  		WHERE M.MEMBER_NO = I.MEMBER_NO
+  			AND I.IREPLY_DELETE IS NULL
+  			AND I.IBOARD_NO = #{iboardNo}
+  			AND I.IREPLY_PARENT IS NULL
+  		ORDER BY I.IREPLY_NO DESC
+   	</select>
+   	
+   	<select id="selectReplyListChild" parameterType="ireply" resultMap="ireplyImageResultSet"> SELECT I.IREPLY_NO AS "IREPLY_NO" , M.MEMBER_NO AS "MEMBER_NO" , M.MEMBER_NAME AS "MEMBER_NAME" , I.IREPLY_CONTENT AS "IREPLY_CONTENT" , TO_CHAR(I.IREPLY_INSERT, 'YYYY-MM-DD') AS "IREPLY_INSERT" FROM IREPLY I, MEMBER M WHERE M.MEMBER_NO = I.MEMBER_NO AND I.IREPLY_DELETE IS NULL AND I.IBOARD_NO = #{iboardNo} AND I.IREPLY_PARENT = #{ireplyNo} ORDER BY I.IREPLY_NO DESC</select>
+    
+   	<insert id="insertReply" parameterType="ireply">
+  		INSERT INTO IREPLY(IREPLY_NO
+			, IREPLY_CONTENT
+			, IBOARD_NO
+			, MEMBER_NO
+			, IREPLY_INSERT
+			, IREPLY_PARENT)
+  		VALUES(SEQ_IREPLY.NEXTVAL
+			, #{ireplyContent}
+			, #{iboardNo}
+			, #{memberNo}
+			, SYSDATE
+			, #{ireplyParent})
+  	</insert>
+  
+    <update id="deletereply" parameterType="_int">
+  		UPDATE IREPLY
+  		SET IREPLY_DELETE = SYSDATE
+  		WHERE IREPLY_NO = #{ireplyNo}
+  	</update>
+  
+  	<update id="updatereply" parameterType="ireply">
+  		UPDATE IREPLY
+  		SET IREPLY_CONTENT = #{ireplyContent},
+  		   	IREPLY_INSERT = SYSDATE
+  		WHERE IREPLY_NO = #{ireplyNo}
+  	</update>
+  	
+  	<select id="selectTopList" resultMap="introResultSet">
+  		SELECT ROWNUM, B.*
+		FROM (SELECT IBOARD_NO
+			, IBOARD_TITLE
+			, IBOARD_WRITER
+			, IBOARD_VIEWS
+			, TO_CHAR(IBOARD_INSERT, 'YYYY-MM-DD') AS "IBOARD_INSERT"
+		FROM IBOARD
+		WHERE IBOARD_DELETE IS NULL
+		ORDER BY COUNT DESC) B
+		WHERE ROWNUM BETWEEN 1 AND 5
+  	</select>
+	
+	<select id="selectRecruitment2" parameterType="_int" resultMap="recruitmentResultSet">
+		SELECT  R.RECRUITMENT_NO,
+			RECRUITMENT_TITLE,
+			RECRUITMENT_CONTENT,
+			MEMBER_NAME AS "RECRUITMENT_WRITER",
+        	RECRUITMENT_INSERT,
+        	RECRUITMENT_VIEWS,
+        	TO_CHAR(R.RECRUITMENT_START, 'YYYY-MM-DD') AS "RECRUITMENT_START",
+        	TO_CHAR(R.RECRUITMENT_END, 'YYYY-MM-DD') AS "RECRUITMENT_END",
+        	RECRUITMENT_LOCATION,
+        	RECRUITMENT_INTRO
+		FROM RECRUITMENT R, MEMBER M, PROJECT P
+		WHERE R.RECRUITMENT_WRITER = M.MEMBER_NO
+          	AND R.RECRUITMENT_NO = P.RECRUITMENT_NO
+          	AND P.PROJECT_NO = #{projectNo}
+	</select>
+	
+	<select id="getTagInfo2" parameterType="recruitment" resultMap="pRelationResultSet">
+		SELECT PR.RECRUITMENT_NO,	
+			T.TAGS_NAME AS "TAGS_NO"
+		FROM PRELATION PR, TAGS T
+		WHERE PR.TAGS_NO = T.TAGS_NO
+			AND PR.RECRUITMENT_NO=#{recruitmentNo}
+	</select>
+	
+	<select id="getState" parameterType="recruitment" resultMap="joinsResultSet">
+		SELECT JOINS_NO,
+			J.MEMBER_NO,
+			J.PROJECT_NO,
+			J.JOINS_ROLE,
+			J.JOINS_REVIEW
+		FROM JOINS J, PROJECT P
+        WHERE J.PROJECT_NO = P.PROJECT_NO
+        	AND P.PROJECT_NO = #{projectNo}
+	</select>
+	
+	<select id="getThumbOne" parameterType="recruitment" resultMap="rAttachmentResultSet">
+		SELECT RECRUITMENT_ATTACHMENT_NO, 
+			RECRUITMENT_NO, 
+			RECRUITMENT_ATTACHMENT_ORIGIN, 
+			RECRUITMENT_ATTACHMENT_CHANGE, 
+			RECRUITMENT_ATTACHMENT_PATH, 
+			RECRUITMENT_ATTACHMENT_INSERT, 
+			RECRUITMENT_ATTACHMENT_LEVEL 
+		FROM  RECRUITMENT_ATTACHMENT
+		WHERE RECRUITMENT_NO=#{recruitmentNo} 
+			AND RECRUITMENT_ATTACHMENT_LEVEL = 0
+	</select>
+	
+	<select id="getAttachmentList2" parameterType="recruitment" resultMap="rAttachmentResultSet">
+		SELECT * FROM 
+		RECRUITMENT_ATTACHMENT
+		WHERE RECRUITMENT_NO=#{recruitmentNo} 
+			AND RECRUITMENT_ATTACHMENT_LEVEL=1
+	</select>
+	
+	<select id="getProject" parameterType="recruitment" resultMap="projectResultSet">
+		SELECT * 
+		FROM PROJECT 		 
+		WHERE RECRUITMENT_NO = #{recruitmentNo}
+	</select>
+	
+	<update id="updateReady" parameterType="_int">
+		UPDATE PROJECT 
+		   SET PROJECT_READY = 3
+		WHERE PROJECT_NO = #{projectNo}
+	</update>
+	
+	<select id="selectRecent" resultMap="introAttachmentResultSet">
+		SELECT *
+		FROM (
+			SELECT IA.IBOARD_NO AS "IBOARD_NO",
+				IATTACHMENT_PATH,
+				IATTACHMENT_CHANGE
+			FROM IATTACHMENT IA, IBOARD I
+			WHERE IA.IBOARD_NO = I.IBOARD_NO
+			AND I.IBOARD_DELETE IS NULL
+			AND IA.IATTACHMENT_LEVEL = 0
+			ORDER BY I.IBOARD_VIEWS DESC
+		)
+		<![CDATA[WHERE ROWNUM <= 3]]>
+	</select>
+		
+	<select id="getThumb2" parameterType="intro" resultMap="introAttachmentResultSet">
+		SELECT IATTACHMENT_NO, 
+			IBOARD_NO, 
+			IATTACHMENT_ORIGIN, 
+			IATTACHMENT_CHANGE, 
+			IATTACHMENT_PATH, 
+			IATTACHMENT_INSERT, 
+			IATTACHMENT_LEVEL 
+		FROM  IATTACHMENT
+		WHERE IBOARD_NO = #{iboardNo} 
+			AND IATTACHMENT_LEVEL = 0
+	</select>
+	
+	<insert id="insertImg" parameterType="introAttachment">
+		INSERT INTO IATTACHMENT(IATTACHMENT_NO,
+										IBOARD_NO,
+										IATTACHMENT_ORIGIN,
+										IATTACHMENT_CHANGE,
+										IATTACHMENT_PATH,
+										IATTACHMENT_LEVEL)
+								   VALUES(SEQ_IATTACHMENT.NEXTVAL,
+										SEQ_IBOARD.CURRVAL,
+										#{iAttachmentOrigin},
+										#{iAttachmentChange},
+										#{iAttachmentPath},
+										#{iAttachmentLevel})
+	</insert>	
+	
+	<select id="selectPro" resultMap="projectResultSet">
+		SELECT P.RECRUITMENT_NO,
+               P.PROJECT_NAME,
+               P.PROJECT_START,
+               P.PROJECT_END
+		FROM PROJECT P, IBOARD I
+		WHERE P.PROJECT_NO = I.PROJECT_NO
+		   	AND PROJECT_READY = 3
+		   	AND P.PROJECT_NO = #{projectNo}
+	</select>
+	
+	<select id="countLike" resultType="_int">
+		SELECT COUNT(LIKES_MEMBER)
+              FROM LIKES
+             WHERE IBOARD_NO = #{iboardNo}
+	</select>
+	
+	<select id="getAttachmentList3" parameterType="intro" resultMap="introAttachmentResultSet">
+		SELECT * 
+		  FROM IATTACHMENT
+		WHERE IBOARD_NO = #{iboardNo} 
+		   AND IATTACHMENT_LEVEL=1
+	</select>
+	
+	<select id="selectRecruitment3" parameterType="intro" resultMap="recruitmentResultSet">
+		SELECT *
+		  FROM RECRUITMENT R, PROJECT P, IBOARD I
+		WHERE P.RECRUITMENT_NO = R.RECRUITMENT_NO
+           AND P.PROJECT_NO = I.PROJECT_NO
+           AND I.IBOARD_NO = #{iboardNo}
+	</select>
+	
+	<update id="updateBoard" parameterType="intro">
+		UPDATE IBOARD
+		   SET IBOARD_TITLE = #{iboardTitle}
+		     , IBOARD_CONTENT = #{iboardContent}
+		     , IBOARD_UPDATE = SYSDATE
+		 WHERE IBOARD_NO = #{iboardNo}
+		   AND IBOARD_DELETE IS NULL     
+	</update>
+	
+	<select id="iBoardUpdate" parameterType="_int" resultMap="introResultSet">
+		SELECT *
+		  FROM IBOARD
+		 WHERE PROJECT_NO = #{projectNo}  
+	</select>
+	
+	<select id="selectListCountAdmin" resultType="_int">
+		SELECT COUNT(*) 
+		  FROM IBOARD
+	</select>
+	<select id="selectListAdmin" resultMap="introResultSet">
+		SELECT IBOARD_NO,
+		 	   IBOARD_TITLE, 
+		 	   PROJECT_NO,
+		 	   IBOARD_VIEWS,
+		 	   IBOARD_CONTENT,
+		 	   M.MEMBER_NAME AS "IBOARD_WRITER",
+		 	   PROJECT_NO,
+		 	   TO_CHAR(I.IBOARD_INSERT, 'YYYY-MM-DD') AS "IBOARD_INSERT",
+		 	   IBOARD_VIEWS
+		  FROM IBOARD I, MEMBER M
+		 WHERE I.IBOARD_WRITER = M.MEMBER_NO
+		   AND IBOARD_DELETE IS NULL
+		 ORDER BY IBOARD_NO DESC
+	       </select>
+	<update id="forceDelete" parameterType="_int">
+		UPDATE IBOARD 
+		   SET IBOARD_DELETE = SYSDATE 
+		 WHERE IBOARD_NO = #{iboardNo} 
+		   AND IBOARD_DELETE IS NULL
+	</update>
+	<update id="forceRestore" parameterType="_int">
+		UPDATE IBOARD 
+		   SET IBOARD_DELETE = NULL 
+		 WHERE IBOARD_NO = #{iboardNo}
+		   AND IBOARD_DELETE IS NOT NULL
+	</update>
+	<select id="getTag" parameterType="_int" resultMap="pRelationResultSet">
+	    SELECT PR.RECRUITMENT_NO AS "RECRUITMENT_NO", 
+	      	   TG.TAGS_NAME AS "TAGS_NO" 
+		  FROM PRELATION PR, TAGS TG, PROJECT P, RECRUITMENT R 
+		 WHERE PR.TAGS_NO = TG.TAGS_NO
+		   AND PR.RECRUITMENT_NO = R.RECRUITMENT_NO
+	       AND R.RECRUITMENT_NO = P.RECRUITMENT_NO
+	       AND PROJECT_NO = #{projectNo} 
+		   AND TG.TAGS_ACTIVE=1
+	</select>
+	
+	<select id="selectSearchCount" parameterType="string" resultType="_int">
+		SELECT COUNT(*)
+		  FROM IBOARD I
+		  JOIN MEMBER ON (IBOARD_WRITER = MEMBER_NO)
+		 WHERE IBOARD_DELETE IS NULL 
+		   AND ${condition} LIKE '%' || #{keyword} || '%'
+	</select>
+	
+	<select id="selectSearchList" parameterType="string" resultMap="introResultSet">
+		SELECT *
+		  FROM IBOARD
+		  JOIN MEMBER ON (IBOARD_WRITER = MEMBER_NO)
+		 WHERE IBOARD_DELETE IS NULL
+		   AND ${condition} LIKE '%' || #{keyword} || '%'
+		 ORDER BY IBOARD_NO DESC
+	</select>
+	
+	<select id="getJoinMember" parameterType="_int" resultMap="profileResultSet">
+		SELECT J.MEMBER_NO, 
+		       M.MEMBER_NAME AS "MEMBER_NAME",
+		       J.JOINS_ROLE,
+		       J.PROJECT_NO, 
+		       M.MEMBER_PHOTO_EXTEND AS "PROFILE_IMG"
+		  FROM MEMBER M,JOINS J
+		 WHERE J.MEMBER_NO = M.MEMBER_NO
+           AND J.PROJECT_NO = #{ProjectNo}
+	</select>
+	
+	<select id="getJoinInfo" parameterType="_int" resultMap="joinsResultSet">
+			SELECT JOINS_NO,
+                   MEMBER_NO,
+                   J.PROJECT_NO,
+                   JOINS_ROLE,
+                   JOINS_ACTIVATE,
+                   JOINS_REVIEW
+              FROM JOINS J, PROJECT P
+             WHERE J.PROJECT_NO = P.PROJECT_NO
+               AND J.PROJECT_NO = #{projectNo}
+	</select>
+	
+	<select id="iAttachmentUpdate" parameterType="_int" resultMap="introAttachmentResultSet">
+		SELECT IA.IBOARD_NO,
+			   IATTACHMENT_NO,
+			   IATTACHMENT_ORIGIN,
+			   IATTACHMENT_CHANGE,
+			   IATTACHMENT_PATH,
+			   IATTACHMENT_INSERT,
+			   IATTACHMENT_LEVEL
+		  FROM IATTACHMENT IA, IBOARD I
+		 WHERE IA.IBOARD_NO = I.IBOARD_NO
+		   AND IA.IBOARD_NO = #{iboardNo}		   
+	</select>
+	
+</mapper>

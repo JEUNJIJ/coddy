@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="memberMapper"> 
+
+	<resultMap id="memberResultSet" type="member">
+		<result column="MEMBER_NO" property="memberNo"/>
+		<result column="MEMBER_ID" property="memberId"/>
+		<result column="MEMBER_PWD" property="memberPwd"/>
+		<result column="MEMBER_EMAIL" property="memberEmail"/>
+		<result column="MEMBER_NAME" property="memberName"/>
+		<result column="MEMBER_PHOTO_EXTEND" property="memberPhotoExtend"/>
+		<result column="MEMBER_INFO" property="memberInfo"/>
+		<result column="MEMBER_INSERT" property="memberInsert"/>
+		<result column="MEMBER_DELETE" property="memberDelete"/>
+	</resultMap>
+	
+	<resultMap id="introResultSet" type="intro">
+			<result column="IBOARD_NO" property="iboardNo"/>
+			<result column="IBOARD_TITLE" property="iboardTitle"/>
+			<result column="IBOARD_CONTENT" property="iboardContent"/>
+			<result column="IBOARD_WRITER" property="iboardWriter"/>
+			<result column="IBOARD_INSERT" property="iboardInsert"/>
+			<result column="IBOARD_UPDATE" property="iboardUpdate"/>
+			<result column="IBOARD_DELETE" property="iboardDelete"/>
+			<result column="PROJECT_NO" property="projectNo"/>
+			<result column="IBOARD_VIEWS" property="iboardViews"/>
+	</resultMap>
+
+	<resultMap id="recruitmentResultSet" type="recruitment">
+		<result column="RECRUITMENT_NO" property="recruitmentNo" />
+		<result column="RECRUITMENT_TITLE" property="recruitmentTitle" />
+		<result column="RECRUITMENT_CONTENT" property="recruitmentContent" />
+		<result column="RECRUITMENT_WRITER" property="recruitmentWriter" />
+		<result column="RECRUITMENT_INSERT" property="recruitmentInsert" />
+		<result column="RECRUITMENT_UPDATE" property="recruitmentUpdate" />
+		<result column="RECRUITMENT_DELETE" property="recruitmentDelete" />
+		<result column="RECRUITMENT_VIEWS" property="recruitmentView" />
+		<result column="RECRUITMENT_START" property="recruitmentStart" />
+		<result column="RECRUITMENT_END" property="recruitmentEnd" />
+		<result column="RECRUITMENT_LOCATION" property="recruitmentLocation" />
+		<result column="RECRUITMENT_INTRO" property="recruitmentIntro" />
+	</resultMap>
+	
+	<resultMap id="cboardResultSet" type="cboard">
+		<result column="CBOARD_NO" property="cboardNo" />
+		<result column="CBOARD_TITLE" property="cboardTitle" />
+		<result column="CBOARD_WRITER" property="cboardWriter" />
+		<result column="CBOARD_INSERT" property="cboardInsert" />
+		<result column="CREATE_DATE" property="createDate" /> 
+		<result column="ORIGIN_NAME" property="originName" />
+		<result column="CBOARD_CONTENT" property="cboardContent" />
+		<result column="CHANGE_NAME" property="changeName" />
+		<result column="CBOARD_VIEWS" property="cboardViews" />
+	</resultMap>
+	
+	<resultMap id="fboardResultSet" type="fboard">
+	    <result column="FBOARD_NO" property="fboardNo"/>
+	    <result column="FBOARD_TITLE" property="fboardTitle"/>
+	    <result column="FBOARD_CONTENT" property="fboardContent"/>
+	    <result column="FBOARD_WRITER" property="fboardWriter"/>
+	    <result column="FBOARD_INSERT" property="fboardInsert"/>
+	    <result column="FBOARD_UPDATE" property="fboardUpdate"/>
+	    <result column="FBOARD_DELETE" property="fboardDelete"/>
+	    <result column="FBOARD_VIEWS" property="fboardViews"/>
+	    <result column="ORIGIN_NAME" property="originName"/>
+	    <result column="CHANGE_NAME" property="changeName"/>
+	</resultMap>
+	
+	<resultMap id="hboardResultSet" type="hboard">
+		<result column="HBOARD_NO" property="hboardNo"/>
+		<result column="HBOARD_TITLE" property="hboardTitle"/>
+		<result column="HBOARD_CONTENT" property="hboardContent"/>
+		<result column="HBOARD_INSERT" property="hboardInsert"/>
+		<result column="HBOARD_UPDATE" property="hboardUpdate"/>
+		<result column="HBOARD_DELETE" property="hboardDelete"/>
+		<result column="HBOARD_VIEWS" property="hboardViews"/>
+		<result column="COMPANY_NO" property="companyNo"/>
+		<result column="HBOARD_START" property="hboardStart"/>
+		<result column="HBOARD_END" property="hboardEnd"/>
+		<result column="HBOARD_SALARY" property="hboardSalary"/>
+		<result column="HBOARD_EDUCATION" property="hboardEducation"/>
+		<result column="HBOARD_CAREER" property="hboardCareer"/>
+		<result column="HBOARD_LOCATION" property="hboardLocation"/>
+	</resultMap>
+	
+	<select id="loginMember" parameterType="member" resultMap="memberResultSet"> SELECT * FROM MEMBER WHERE MEMBER_ID = #{memberId} AND MEMBER_DELETE IS NULL </select>
+	<select id="memberCheck" parameterType="string" resultType="_int">SELECT COUNT(*) FROM MEMBER WHERE MEMBER_ID=#{checkId}</select>
+
+	<update id="updateMember" parameterType="member">
+		UPDATE MEMBER
+			SET MEMBER_NAME = #{memberName},
+				MEMBER_INFO = #{memberInfo}
+			WHERE MEMBER_ID = #{memberId}
+			AND MEMBER_DELETE IS NULL
+	</update>
+
+	<update id="deleteMember" parameterType="string">
+		 UPDATE MEMBER
+			SET MEMBER_DELETE = SYSDATE
+		  WHERE MEMBER_ID = #{memberId}
+	</update>
+	
+	<update id="PwdChangeForm" parameterType="string">
+		UPDATE MEMBER
+		   SET MEMBER_PWD = #{memberPwd}
+		 WHERE MEMBER_ID = #{memberId}
+		   AND MEMBER_DELETE IS NULL
+	</update>
+
+	<update id="uploadFile" parameterType="_int">
+		UPDATE MEMBER 
+		   SET MEMBER_PHOTO_EXTEND='jpg' 
+		 WHERE MEMBER_NO = #{memberNo} 
+		   AND MEMBER_DELETE IS NULL
+	</update>
+
+	<select id="selectListCounti" resultType="_int">
+		  SELECT COUNT(*)
+		    FROM IBOARD
+		   WHERE IBOARD_DELETE IS NULL
+		     AND IBOARD_WRITER = #{memberNo}
+	</select>
+	
+	<select id="selectListi" parameterType="_int" resultMap="introResultSet">
+		 SELECT IBOARD_NO,
+		 		IBOARD_TITLE,
+		 		IBOARD_VIEWS,
+		 		M.MEMBER_NAME AS "IBOARD_WRITER",
+		 	    TO_CHAR(I.IBOARD_INSERT, 'YYYY-MM-DD') AS "IBOARD_INSERT"
+		   FROM IBOARD I, MEMBER M
+		  WHERE M.MEMBER_NO = I.IBOARD_WRITER
+		    AND IBOARD_DELETE IS NULL
+		    AND IBOARD_WRITER = #{memberNo}
+	</select>
+	
+	<select id="selectListCounth" resultType="int">
+        SELECT COUNT(*) 
+          FROM HWISHLIST HW, HBOARD H
+         WHERE H.HBOARD_DELETE IS NULL
+         	AND HW.HBOARD_NO = H.HBOARD_NO
+		   AND HW.HWISHLIST_MEMBER = #{memberNo}
+    </select>
+
+    <select id="selectListh" parameterType="map" resultType="com.kh.coddy.board.job.model.vo.Hboard">
+	        SELECT 
+	        H.HBOARD_NO as hboardNo, 
+	        H.HBOARD_TITLE as hboardTitle, 
+	        H.HBOARD_CONTENT as hboardContent, 
+	        H.HBOARD_INSERT as hboardInsert,
+                H.HBOARD_DELETE as hboardDelete, 
+                H.HBOARD_VIEWS as hboardViews, 
+                H.HBOARD_START as hboardStart, 
+                H.HBOARD_END AS hboardEnd,
+                CO.COMPANY_NAME AS companyNo
+	        FROM HBOARD H
+	        JOIN COMPANY CO ON CO.COMPANY_NO = H.COMPANY_NO
+            JOIN HWISHLIST HW ON HW.HBOARD_NO = H.HBOARD_NO
+	        WHERE H.HBOARD_DELETE IS NULL
+	        	AND HW.HWISHLIST_MEMBER = #{memberNo}
+	        ORDER BY H.HBOARD_NO DESC
+	</select>
+	
+	
+	
+	<select id="selectListCountr" resultType="_int">
+		  SELECT COUNT(*)
+		    FROM RECRUITMENT
+		   WHERE RECRUITMENT_DELETE IS NULL
+		     AND RECRUITMENT_WRITER = #{memberNo}
+	</select>
+	
+	<select id="selectListr" parameterType="_int" resultMap="recruitmentResultSet">
+		 SELECT RECRUITMENT_NO,
+		 		RECRUITMENT_TITLE,
+		 		RECRUITMENT_VIEWS,
+		 		M.MEMBER_NAME AS "RECRUITMENT_WRITER",
+		 	    TO_CHAR(R.RECRUITMENT_INSERT, 'YYYY-MM-DD') AS "RECRUITMENT_INSERT"
+		   FROM RECRUITMENT R, MEMBER M
+		  WHERE M.MEMBER_NO = R.RECRUITMENT_WRITER
+		    AND RECRUITMENT_DELETE IS NULL
+		    AND RECRUITMENT_WRITER = #{memberNo}
+	</select>
+	
+	<select id="selectListCountc" resultType="_int">
+		  SELECT COUNT(*)
+		    FROM CBOARD
+		   WHERE CBOARD_DELETE IS NULL
+		     AND CBOARD_WRITER = #{memberNo}
+	</select>
+	
+	<select id="selectListc" parameterType="_int" resultMap="cboardResultSet">
+		 SELECT CBOARD_NO,
+		 		CBOARD_TITLE,
+		 		CBOARD_VIEWS,
+		 		M.MEMBER_NAME AS "CBOARD_WRITER",
+		 	    TO_CHAR(C.CBOARD_INSERT, 'YYYY-MM-DD') AS "CBOARD_INSERT"
+		   FROM CBOARD C, MEMBER M
+		  WHERE M.MEMBER_NO = C.CBOARD_WRITER
+		    AND CBOARD_DELETE IS NULL
+		    AND CBOARD_WRITER = #{memberNo}
+	</select>
+	
+	<select id="selectListCountf" resultType="_int">
+		  SELECT COUNT(*)
+		    FROM FBOARD
+		   WHERE FBOARD_DELETE IS NULL
+		     AND FBOARD_WRITER = #{memberNo}
+	</select>
+	
+	<select id="selectListf" parameterType="_int" resultMap="fboardResultSet">
+		 SELECT FBOARD_NO,
+		 		FBOARD_TITLE,
+		 		FBOARD_VIEWS,
+		 		M.MEMBER_NAME AS "FBOARD_WRITER",
+		 	    TO_CHAR(F.FBOARD_INSERT, 'YYYY-MM-DD') AS "FBOARD_INSERT"
+		   FROM FBOARD F, MEMBER M
+		  WHERE M.MEMBER_NO = F.FBOARD_WRITER
+		    AND FBOARD_DELETE IS NULL
+		    AND FBOARD_WRITER = #{memberNo}
+	</select>
+	
+	<select id="count1" parameterType="_int" resultType="_int">
+		SELECT COUNT(*)
+		  FROM RECRUITMENT R, MEMBER M
+		 WHERE R.RECRUITMENT_WRITER = M.MEMBER_NO
+		   AND R.RECRUITMENT_WRITER = #{memberNo}
+		   AND R.RECRUITMENT_DELETE IS NULL
+	</select>
+	
+	<select id="count2" parameterType="_int" resultType="_int">
+		SELECT COUNT(*)
+		  FROM CBOARD C, MEMBER M
+		 WHERE C.CBOARD_WRITER = M.MEMBER_NO
+		   AND C.CBOARD_WRITER = #{memberNo}
+		   AND C.CBOARD_DELETE IS NULL
+	</select>
+	
+	<select id="count3" parameterType="_int" resultType="_int">
+		SELECT COUNT(*)
+		  FROM FBOARD F, MEMBER M
+		 WHERE F.FBOARD_WRITER = M.MEMBER_NO
+		   AND F.FBOARD_WRITER = #{memberNo}
+		   AND F.FBOARD_DELETE IS NULL
+	</select>
+	
+	<select id="count4" parameterType="_int" resultType="_int">
+		SELECT COUNT(*)
+		  FROM IBOARD I, MEMBER M
+		 WHERE I.IBOARD_WRITER = M.MEMBER_NO
+		   AND I.IBOARD_WRITER = #{memberNo}
+		   AND I.IBOARD_DELETE IS NULL
+	</select>
+	
+	<select id="projecting" parameterType="_int" resultType="_int">
+	    SELECT COUNT(*)
+		  FROM RECRUITMENT R, PROJECT P, MEMBER M, JOINS J
+         WHERE R.RECRUITMENT_NO = P.RECRUITMENT_NO
+           AND P.PROJECT_NO = J.PROJECT_NO
+           AND J.MEMBER_NO = M.MEMBER_NO
+           AND JOINS_ACTIVATE = 1
+           AND J.MEMBER_NO = #{memberNo}
+           AND R.RECRUITMENT_DELETE IS NULL
+	</select>
+	
+	<select id="selectListing" parameterType="_int" resultMap="recruitmentResultSet">
+		 SELECT
+    R.RECRUITMENT_NO AS "RECRUITMENT_NO",
+    R.RECRUITMENT_TITLE AS "RECRUITMENT_TITLE",
+    R.RECRUITMENT_WRITER AS "RECRUITMENT_WRITER",
+    R.RECRUITMENT_INSERT AS "RECRUITMENT_INSERT",
+    R.RECRUITMENT_VIEWS AS "RECRUITMENT_VIEWS"
+	FROM RECRUITMENT R
+	JOIN PROJECT P ON R.RECRUITMENT_NO = P.RECRUITMENT_NO
+	JOIN JOINS J ON P.PROJECT_NO = J.PROJECT_NO
+	JOIN MEMBER M ON J.MEMBER_NO = M.MEMBER_NO
+	WHERE J.JOINS_ACTIVATE = 1
+    AND J.MEMBER_NO = #{memberNo}
+    AND R.RECRUITMENT_DELETE IS NULL
+	</select>
+	
+	<select id="selectMember" parameterType="_int" resultMap="memberResultSet">
+		SELECT MEMBER_NO,
+			   MEMBER_ID,
+			   MEMBER_EMAIL,
+			   MEMBER_NAME,
+			   MEMBER_PHOTO_EXTEND,
+			   MEMBER_INFO,
+			   MEMBER_INSERT
+		  FROM MEMBER
+		 WHERE MEMBER_NO = #{memberNo}
+	</select>
+	
+	<select id="selectListyourCount" parameterType="_int" resultType="_int">
+		     SELECT COUNT(*)
+		    FROM RECRUITMENT R, PROJECT P
+		   WHERE R.RECRUITMENT_NO = P.RECRUITMENT_NO 
+		     AND RECRUITMENT_DELETE IS NULL
+		     AND PROJECT_READY = 1
+		     AND RECRUITMENT_WRITER = #{memberNo}
+	</select>
+	
+	<select id="selectListyour" parameterType="_int" resultMap="recruitmentResultSet">
+		 SELECT R.RECRUITMENT_NO,
+		 		R.RECRUITMENT_TITLE,
+		 		R.RECRUITMENT_VIEWS,
+		 		M.MEMBER_NAME AS "RECRUITMENT_WRITER",
+		 	    TO_CHAR(R.RECRUITMENT_INSERT, 'YYYY-MM-DD') AS "RECRUITMENT_INSERT"
+		   FROM RECRUITMENT R, MEMBER M, PROJECT P
+		  WHERE M.MEMBER_NO = R.RECRUITMENT_WRITER
+		    AND R.RECRUITMENT_NO = P.RECRUITMENT_NO
+		    AND R.RECRUITMENT_DELETE IS NULL
+		    AND P.PROJECT_READY = 1
+		    AND R.RECRUITMENT_WRITER = #{memberNo}
+	</select>
+	
+	<insert id="insertMember" parameterType="member">INSERT INTO MEMBER(MEMBER_NO, MEMBER_ID, MEMBER_PWD, MEMBER_EMAIL, MEMBER_NAME, MEMBER_INFO) VALUES(SEQ_MEMBER.NEXTVAL, #{memberId}, #{memberPwd}, #{memberEmail}, #{memberName}, #{memberInfo})</insert>
+	<select id="findId" parameterType="member" resultType="string">SELECT MEMBER_ID FROM MEMBER WHERE MEMBER_EMAIL=#{memberEmail} AND MEMBER_NAME=#{memberName} AND MEMBER_DELETE IS NULL</select>
+	<select id="findPwd" parameterType="member" resultType="_int">SELECT COUNT(*) FROM MEMBER WHERE MEMBER_EMAIL=#{memberEmail} AND MEMBER_NAME=#{memberName} AND MEMBER_DELETE IS NULL</select>
+	<update id="setNewPassword" parameterType="member">UPDATE MEMBER SET MEMBER_PWD=#{memberPwd} WHERE MEMBER_EMAIL=#{memberEmail} AND MEMBER_DELETE IS NULL</update>
+	<select id="findEmail" parameterType="member" resultType="string">SELECT MEMBER_EMAIL FROM MEMBER WHERE MEMBER_NAME=#{memberName} AND MEMBER_DELETE IS NULL</select>
+	<select id="selectListCountAdmin" resultType="_int">SELECT COUNT(*) FROM MEMBER</select>
+	<select id="selectListAdmin" resultMap="memberResultSet">SELECT * FROM MEMBER</select>
+	<update id="deleteMemberAdmin" parameterType="_int">UPDATE MEMBER SET MEMBER_DELETE=SYSDATE WHERE MEMBER_DELETE IS NULL AND MEMBER_NO=#{memberNo}</update>
+	<update id="restoreMemberAdmin" parameterType="_int">UPDATE MEMBER SET MEMBER_DELETE=NULL WHERE MEMBER_DELETE IS NOT NULL AND MEMBER_NO=#{memberNo}</update>
+</mapper>

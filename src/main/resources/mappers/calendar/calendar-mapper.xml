@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="calendarMapper">
+
+	<resultMap id="ScheduleResultSet" type="schedule">
+		<result column="PROJECT_NO" property="projectNo" />
+		<result column="CALENDAR_TITLE" property="eventTitle" />
+		<result column="START_POINT" property="startDate" />
+		<result column="END_POINT" property="endDate" />
+	</resultMap>
+
+	<select id="selectSchedule" parameterType="_int" resultMap="ScheduleResultSet">
+		SELECT PROJECT_NO, CALENDAR_TITLE, START_POINT, END_POINT
+		FROM CALENDAR
+		WHERE PROJECT_NO = #{pno}
+	</select>
+
+    <insert id="insertSchedule" parameterType="schedule">
+        INSERT INTO CALENDAR (CALENDAR_NO, PROJECT_NO, CALENDAR_TITLE, START_POINT, END_POINT)
+        VALUES(SEQ_CALENDAR.NEXTVAL, #{projectNo}, #{eventTitle}, #{startDate}, #{endDate})
+    </insert>
+    
+    <delete id="deleteSchedule" parameterType="schedule">	
+    	DELETE FROM CALENDAR
+    	WHERE PROJECT_NO = #{projectNo}
+    	AND CALENDAR_TITLE = #{eventTitle}
+    	AND START_POINT = #{startDate}
+    	AND END_POINT = #{endDate}
+    </delete>
+</mapper>

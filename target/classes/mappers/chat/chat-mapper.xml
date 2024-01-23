@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="chatMapper">
+	
+	<resultMap id="chatRoomResultSet" type="chatRoom">
+		<result column="PROJECT_NO" property="roomId"></result>
+		<result column="CHAT_MASTER" property="userNo"></result>
+		<result column="CHAT_INSERT" property="chatInsert"></result>
+	</resultMap>
+	
+	<resultMap id="chatMessageResultMap" type="chatMessage">
+		<result column="CHATR_NO" property="messageId" />
+		<result column="PROJECT_NO" property="roomId" />
+		<result column="MEMBER_NO" property="memberNo" />
+		<result column="MEMBER_NAME" property="memberName" />
+		<result column="CHATR_MSG" property="message" />	
+		<result column="CHATR_TYPE" property="messageType"/>	
+	</resultMap>
+	
+	<resultMap id="chatMemberResultMap" type="chatMember">
+		<result column="PROJECT_NO" property="projectNo" /> 
+		<result column="MEMBER_NO" property="memberNo" />
+		<result column="ROLE" property="role" />
+		<result column="MEMBER_NAME" property="memberName" />
+		<result column="MEMBER_PHOTO_EXTEND" property="memberPhotoExtend" />
+	</resultMap>
+	
+	<resultMap id="projectResultSet" type="project">
+		<result column="PROJECT_NO" property="projectNo" />
+		<result column="PROJECT_OWNER" property="projectOwner" />
+		<result column="RECRUITMENT_NO" property="recruitmentNo" />
+		<result column="PROJECT_NAME" property="projectName" />
+		<result column="PROJECT_INFO" property="projectInfo" />
+		<result column="PROJECT_INSERT" property="projectInsert" />
+		<result column="PROJECT_START" property="projectStart" />
+		<result column="PROJECT_END" property="projectEnd" />
+		<result column="PROJECT_LOCATION" property="projectLocation" />
+		<result column="PROJECT_READY" property="projectReady" />
+	</resultMap>
+		
+	<select id="selectChatRoom" parameterType="string" resultMap="chatRoomResultSet">
+		SELECT *
+		FROM CHAT
+		WHERE PROJECT_NO = #{roomId}
+	
+	</select>
+	
+	<insert id="insertMessage" parameterType="chatMessage">		     
+		INSERT INTO CHAT_RECORD(CHATR_NO, 
+								PROJECT_NO, 
+								CHATR_SENDER, 
+								CHATR_MSG,
+								CHATR_TYPE)
+						 VALUES(SEQ_CHAT_RECORD.NEXTVAL, 
+						 		#{roomId},
+						 		#{memberNo},
+						 		#{message},
+						 		#{messageType})
+	</insert>
+	
+	<select id="messageList" parameterType="_int" resultMap="chatMessageResultMap">
+		SELECT C.CHATR_NO, C.PROJECT_NO, M.MEMBER_NO , M.MEMBER_NAME, C.CHATR_MSG, C.CHATR_TYPE
+		  FROM CHAT_RECORD C, MEMBER M
+		 WHERE C.CHATR_SENDER = M.MEMBER_NO
+	  	   AND C.PROJECT_NO = #{roomId}
+	     ORDER BY CHATR_INSERT ASC
+	</select>
+	
+	<insert id="createChat" parameterType="chatRoom">
+		INSERT INTO CHAT(PROJECT_NO, CHAT_MASTER) VALUES(#{roomId}, #{userNo})
+	</insert>
+	
+	<delete id="outChat" parameterType="chatMember">
+		DELETE FROM CHAT_MEMBER
+		WHERE PROJECT_NO = #{projectNo}
+		AND MEMBER_NO = #{memberNo}
+		AND ROLE = #{role}
+	</delete>
+	
+	<select id="getApply" parameterType="chatMember" resultType="_int">
+		SELECT COUNT(*) 
+		  FROM CHAT_MEMBER 
+		 WHERE PROJECT_NO = #{projectNo} 
+		   AND ROLE = #{role}
+	</select>
+	
+	<select id="getFixApply" parameterType="chatMember" resultType="_int">
+		SELECT MEMBER_NO
+		FROM JOINS 
+		WHERE PROJECT_NO = #{projectNo} 
+		AND JOINS_ROLE = #{role}
+	</select>
+	
+	<insert id="insertApply" parameterType="chatMember">
+		INSERT INTO CHAT_MEMBER
+		VALUES(#{projectNo},#{memberNo},#{role})
+	</insert>
+	
+	<select id="chatMemberList" parameterType="_int" resultMap="chatMemberResultMap">
+		SELECT C.PROJECT_NO ,C.MEMBER_NO, C.ROLE, M.MEMBER_NAME, M.MEMBER_PHOTO_EXTEND
+		FROM CHAT_MEMBER C, MEMBER M
+		WHERE C.MEMBER_NO = M.MEMBER_NO
+		AND C.PROJECT_NO = #{projectNo}
+	</select>
+	
+	<select id="getProject" parameterType="_int" resultMap="projectResultSet">
+		SELECT *
+		FROM PROJECT
+		WHERE PROJECT_NO = #{projectNo}
+	</select>
+	
+</mapper>

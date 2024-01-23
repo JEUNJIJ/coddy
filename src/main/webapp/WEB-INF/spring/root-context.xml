@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+	
+	<!-- 외부 properties -->
+	<context:property-placeholder location="/config/config.properties" />
+
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- db등록 -->
+	<bean class="org.apache.commons.dbcp.BasicDataSource" id="basicDataSource" destroy-method="close">				
+		<property name="driverClassName" value="${spring.datasource.driverClassname}" />
+		<property name="url" value="${spring.datasource.url}" />
+		<property name="username" value="${spring.datasource.username}" />
+		<property name="password" value="${spring.datasource.password}" />
+	</bean>
+	
+	<!--  mybatis 관련 빈 등록 -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+			<property name="configLocation" value="classpath:mybatis-config.xml" />
+			<!-- classpath:src/main/resources/ 폴더로부터 시작하는 경로를 지정 -->
+			
+			<property name="dataSource" ref="basicDataSource" />
+			<!--  ref: 객체타입을 초기화 할때 사용  -->								
+	</bean>
+	<bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
+			<constructor-arg ref="sqlSessionFactory"/>		
+	</bean>			
+		
+	<!--  이메일 전송 관련한 빈 등록 -->
+	<bean class="org.springframework.mail.javamail.JavaMailSenderImpl" id="mailSender">
+		<property name="host" value="smtp.gmail.com"/>
+		<property name="port" value="25"/>
+		<property name="username" value="${spring.datasource.email}" />
+		<property name="password" value="${spring.datasource.email.key}" />
+		<!--  이메일 전송시 필요한 SMTP 설정 지정  -->
+		<property name="javaMailProperties">
+			<props>
+				<!--  smtp 프로토콜을 이용해서 메이을 보냄 -->
+				<prop key="mail.trasport.protocol">smtp</prop>
+				<!--  메일을 보내는것을 허용 -->
+				<prop key="mail.smtp.auth">true</prop>
+				<!-- 암호화과정을 거쳐 메일을 보냄 -->
+				<prop key="mail.smtp.starttls.enable">true</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 파일업로드 관련 빈 등록 -->
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver">
+		<!-- defaultEncoding : 업로드 되는 파일에 대한 인코딩 처리를 어떻게 할건지 지정 -->
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- maxUploadSize : 한번에 전체 업로드 되는 파일의 총 용량 -->
+		<!-- -1은 제한이 없음 -->
+		<property name="maxUploadSize" value="-1" />
+		<property name="maxUploadSizePerFile" value="-1" />
+	</bean>	
+
+	
+
+	
+</beans>

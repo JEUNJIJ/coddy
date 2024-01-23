@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="companyMapper"> 
+	<resultMap id="companyResultSet" type="company">
+		<result column="COMPANY_NO" property="companyNo"/>
+		<result column="COMPANY_NAME" property="companyName"/>
+		<result column="COMPANY_OWNER" property="companyOwner"/>
+		<result column="COMPANY_ID" property="companyId"/>
+		<result column="COMPANY_PWD" property="companyPwd"/>
+		<result column="COMPANY_EMAIL" property="companyEmail"/>
+		<result column="COMPANY_PHOTO_EXTEND" property="companyPhotoExtend"/>
+		<result column="COMPANY_BNO" property="companyBno"/>
+		<result column="COMPANY_INFO" property="companyInfo"/>
+		<result column="COMPANY_INSERT" property="companyInsert"/>
+		<result column="COMPANY_DELETE" property="companyDelete"/>
+		<result column="COMPANY_WORKER" property="companyWorker"/>
+		<result column="COMPANY_SALARY" property="companySalary"/>
+	</resultMap>
+	<select id="companyCheck" parameterType="string" resultType="_int">SELECT COUNT(*) FROM COMPANY WHERE COMPANY_ID=#{id}</select>
+</mapper>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+.comment {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.comment .author {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment .author-info {
+  display: flex;
+  align-items: center;
+}
+
+.comment .author img {
+  width: 30px; /* 이미지 크기 조절 */
+  height: 30px;
+  border-radius: 50%; /* 이미지를 동그랗게 만들기 위한 속성 */
+  margin-right: 10px;
+}
+
+.comment .author span {
+  font-weight: bold;
+  color: #333;
+}
+
+.comment .actions {
+  display: flex;
+}
+
+.comment .actions a {
+  margin-left: 10px;
+}
+
+.comment .content {
+  margin-top: 5px;
+  color: #555;
+}
+
+.comment .timestamp {
+  font-size: 12px;
+  color: #888;
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="comment">
+        <div class="author">
+          <div class="author-info">
+            <img src="your_image_url.jpg" alt="작성자 이미지">
+            <span>작성자1</span>
+          </div>
+          <div class="actions">
+            <a href="#" class="edit-link">수정하기</a>
+            <a href="#" class="delete-link">삭제하기</a>
+          </div>
+        </div>
+        <div class="content">이것은 첫 번째 댓글입니다. 어떠신가요?</div>
+        <div class="timestamp">2023-12-13 12:34</div>
+      </div>
+      
+      <div class="comment">
+        <div class="author">
+          <div class="author-info">
+            <img src="your_image_url.jpg" alt="작성자 이미지">
+            <span>작성자2</span>
+          </div>
+          <div class="actions">
+            <a href="#" class="edit-link">수정하기</a>
+            <a href="#" class="delete-link">삭제하기</a>
+          </div>
+        </div>
+        <div class="content">두 번째 댓글입니다. 좋은 글이네요!</div>
+        <div class="timestamp">2023-12-13 13:45</div>
+      </div>
+</body>
+</html>

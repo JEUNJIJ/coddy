@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="nboardMapper">
+
+	<!-- NBOARD resultMap -->
+	<resultMap id="nboardResultSet" type="nboard">
+	    <result column="NBOARD_NO" property="nboardNo"/>
+	    <result column="NBOARD_TITLE" property="nboardTitle"/>
+	    <result column="NBOARD_CONTENT" property="nboardContent"/>
+	    <result column="NBOARD_INSERT" property="nboardInsert"/>
+	    <result column="NBOARD_UPDATE" property="nboardUpdate"/>
+	    <result column="NBOARD_DELETE" property="nboardDelete"/>
+	    <result column="NBOARD_ORIGIN" property="nboardOrigin" />
+	    <result column="NBOARD_CHANGE" property="nboardChange" />
+	    <result column="NBOARD_VIEWS" property="nboardViews"/>
+	</resultMap>
+
+	<!-- NATTACHMENT resultMap -->
+	<resultMap id="nattachmentResultSet" type="nattachment">
+	    <result column="NATTACHMENT_NO" property="nattachmentNo"/>
+	    <result column="NBOARD_NO" property="nboardNo"/>
+	    <result column="NATTACHMENT_ORIGIN" property="nattachmentOrigin"/>
+	    <result column="NATTACHMENT_CHANGE" property="nattachmentChange"/>
+	    <result column="NATTACHMENT_PATH" property="nattachmentPath"/>
+	    <result column="NATTACHMENT_INSERT" property="nattachmentInsert"/>
+	    <result column="NATTACHMENT_LEVEL" property="nattachmentLevel"/>
+	</resultMap>
+	
+	<!-- NBOARD insert -->
+	<insert id="insertBoard" parameterType="nboard">
+	    INSERT INTO NBOARD (NBOARD_NO, 
+	    					NBOARD_TITLE, 
+	    					NBOARD_CONTENT, 
+	    					NBOARD_INSERT,
+	    					NBOARD_ORIGIN,
+	    					NBOARD_CHANGE)
+	    VALUES (SEQ_NBOARD.NEXTVAL, 
+	    		#{nboardTitle}, 
+	    		#{nboardContent}, 
+	    		SYSDATE,
+	    		#{nboardOrigin},
+	    		#{nboardChange})
+	</insert>
+	
+	<!-- NBOARD select -->
+	<select id="selectBoard" parameterType="_int" resultMap="nboardResultSet">
+	    SELECT NBOARD_NO, 
+	           NBOARD_TITLE,
+	           NBOARD_CONTENT,
+	    	   NBOARD_INSERT AS "NBOARD_INSERT",
+		       NBOARD_VIEWS,
+		       NBOARD_ORIGIN,
+		       NBOARD_CHANGE
+	    	FROM NBOARD
+	       WHERE NBOARD_NO = #{nboardNo} 
+	         AND NBOARD_DELETE IS NULL
+	</select>
+			
+	<!-- NBOARD selectListCount -->	
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*)
+		  FROM NBOARD 
+		 WHERE NBOARD_DELETE IS NULL
+	</select>   
+	
+	<!-- NBOARD selectList -->
+	<select id="selectList" resultMap="nboardResultSet">
+		SELECT NBOARD_NO
+		     , NBOARD_TITLE
+		     , NBOARD_VIEWS
+		     , TO_CHAR(NBOARD_INSERT, 'YYYY-MM-DD') AS "NBOARD_INSERT"
+		     , NBOARD_ORIGIN
+		  FROM NBOARD
+		 WHERE NBOARD_DELETE IS NULL 
+		 ORDER BY NBOARD_NO DESC
+	</select>
+	
+	<update id="increaseCount" parameterType="_int">
+		UPDATE NBOARD
+		   SET NBOARD_VIEWS = NBOARD_VIEWS + 1
+		 WHERE NBOARD_NO = #{nboardNo} AND NBOARD_DELETE IS NULL
+	</update> 
+	
+	<!-- NBOARD update -->
+	<update id="updateBoard" parameterType="nboard">
+	    UPDATE NBOARD
+	    SET NBOARD_TITLE = #{nboardTitle},
+	        NBOARD_CONTENT = #{nboardContent},
+	        NBOARD_UPDATE = SYSDATE,
+	        NBOARD_ORIGIN = #{nboardOrigin},
+	        NBOARD_CHANGE= #{nboardChange}
+	    WHERE NBOARD_NO = #{nboardNo} AND NBOARD_DELETE IS NULL
+	</update>
+
+	<!-- NBOARD delete -->
+	<update id="deleteBoard" parameterType="_int">
+	    UPDATE NBOARD 
+	       SET NBOARD_DELETE = SYSDATE 
+	     WHERE NBOARD_NO = #{nboardNo} 
+	       AND NBOARD_DELETE IS NULL
+	</update>
+	
+	<select id="selectAttachment" parameterType="nattachment" resultMap="nattachmentResultSet">
+     SELECT NATACHMENT_NO,
+            NBOARD_NO, 
+            NATACHMENT_ORIGIN, 
+            NATACHMENT_CHANGE, 
+            NATACHMENT_PATH,
+            NATACHMENT_INSERT, 
+            NATACHMENT_LEVEL 
+      FROM NATACHMENT 
+     WHERE NBOARD_NO = #{nboardNo} 
+       AND NATACHMENT_LEVEL = 1
+	</select>
+	
+    <select id="getAttachmentList" parameterType="nattachment" resultMap="nattachmentResultSet">
+    SELECT * 
+      FROM NATACHMENT 
+     WHERE NBOARD_NO = #{nboardNo} 
+       AND NATACHMENT_LEVEL = 0
+    </select>		
+		
+</mapper>
